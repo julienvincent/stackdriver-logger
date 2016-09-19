@@ -46,6 +46,8 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
             level: level || "INFO",
             timestamp: _.now()
         }
+        
+        console.log(`[${log.timestamp}] [${log.level}] ${log.message}`)
 
         if (connected) {
             socket.emit('log', log)
