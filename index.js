@@ -43,7 +43,8 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
         const log = {
             message,
             payload: payload || null,
-            level: level || "INFO"
+            level: level || "INFO",
+            timestamp: _.now()
         }
 
         if (connected) {
