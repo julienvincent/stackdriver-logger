@@ -6,7 +6,8 @@ type ConnectionInfoType = {
     url: String,
     key: String,
     pod: String,
-    kind: String
+    kind: String,
+    consume: Boolean
 }
 
 type Level = "INFO" | "WARNING" | "ERROR"
@@ -18,6 +19,7 @@ type SocketIO = {
 
 const createLogger = (ConnectionInfo: ConnectionInfoType) => {
     const socket: SocketIO = io(ConnectionInfo.url)
+    const _log = console.log
 
     let connected = false
     const backlog = []
@@ -46,8 +48,8 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
             level: level || "INFO",
             timestamp: _.now()
         }
-        
-        console.log(`[${log.timestamp}] [${log.level}] ${log.message}`)
+
+        _log(`[${log.timestamp}] [${log.level}] ${log.message}`)
 
         if (connected) {
             socket.emit('log', log)
@@ -62,6 +64,13 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
 
     logger.warn = (message, payload) => {
         logger(message, payload, "WARNING")
+    }
+    
+    if (ConnectionInfo.consume) {
+        console.log = (...messages) => {
+            const merged = _.join(messages, '\n')
+            logger(merged)
+        }
     }
 
     return logger
