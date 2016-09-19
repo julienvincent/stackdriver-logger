@@ -65,7 +65,7 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
     logger.warn = (message, payload) => {
         logger(message, payload, "WARNING")
     }
-    
+
     if (ConnectionInfo.consume) {
         console.log = (...messages) => {
             const merged = _.join(messages, '\n')
