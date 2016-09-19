@@ -22,7 +22,7 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
     const _log = console.log
 
     let connected = false
-    const backlog = []
+    let backlog = []
 
     socket.on('connect', () => {
         socket.emit('register', {
@@ -34,10 +34,11 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
 
     socket.on('accepted', () => {
         connected = true
+        let reLog = backlog
+        backlog = []
 
-        _.forEach(backlog, (log, i) => {
+        _.forEach(reLog, log => {
             socket.emit('log', log)
-            backlog.splice(i, 1)
         })
     })
 
