@@ -42,6 +42,10 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
         })
     })
 
+    socket.on('rejected', () => {
+        console.log("Rejected from logging server")
+    })
+
     const logger = (message: String, payload: ?any, level: ?Level) => {
         const log = {
             message,
