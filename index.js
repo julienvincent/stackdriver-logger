@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 type ConnectionInfoType = {
     url: String,
-    key: String,
+    token: String,
     pod: String,
     kind: String,
     consume: Boolean
@@ -26,7 +26,7 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
 
     socket.on('connect', () => {
         socket.emit('register', {
-            key: ConnectionInfo.key,
+            token: ConnectionInfo.token,
             kind: ConnectionInfo.kind,
             pod: ConnectionInfo.pod
         })
