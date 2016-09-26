@@ -53,8 +53,8 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
             level: level || "INFO",
             timestamp: _.now()
         }
-
-        _log(`[${log.timestamp}] [${log.level}] ${log.message}`)
+        
+        _log(`[${log.timestamp}] [${log.level}] ${JSON.stringify(log.message || null, null, 2).replace(/\"([^(\")"]+)\":/g, "$1:")}`)
 
         if (connected) {
             socket.emit('log', log)
