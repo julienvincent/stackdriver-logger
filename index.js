@@ -10,7 +10,7 @@ type ConnectionInfoType = {
     consume: Boolean
 }
 
-type Level = "INFO" | "WARNING" | "ERROR"
+type Level = "INFO" | "WARNING" | "ERROR" | "IMPORTANT"
 
 type SocketIO = {
     on: Function,
@@ -54,7 +54,8 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
             timestamp: _.now()
         }
         
-        _log(`[${log.timestamp}] [${log.level}] ${JSON.stringify(log.message || null, null, 2).replace(/\"([^(\")"]+)\":/g, "$1:")}`)
+        _log(log.message)
+        if (payload) _log(payload)
 
         if (connected) {
             socket.emit('log', log)
