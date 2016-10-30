@@ -55,7 +55,6 @@ const createLogger = (ConnectionInfo: ConnectionInfoType) => {
         }
         
         _log(log.message)
-        if (payload) _log(payload)
 
         if (connected) {
             socket.emit('log', log)
