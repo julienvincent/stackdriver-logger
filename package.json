@@ -1,8 +1,11 @@
 {
-  "name": "log-to-stream",
+  "name": "@yumo/logger",
   "version": "0.0.1",
   "description": "Lib for logging to a stream",
   "main": "lib/index.js",
+  "publishConfig": {
+    "registry": "http://registry.yumochefs.com"
+  },
   "scripts": {
     "build": "rm -rf lib && babel index.js -d lib",
     "prepublish": "npm run build"
