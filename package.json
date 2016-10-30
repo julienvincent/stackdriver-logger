@@ -1,6 +1,6 @@
 {
   "name": "@yumo/logger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lib for logging to a stream",
   "main": "lib/index.js",
   "publishConfig": {
