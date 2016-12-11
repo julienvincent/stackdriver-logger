@@ -1,6 +1,6 @@
 {
   "name": "local-logger",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Lib for logging to stackdriver",
   "main": "lib/index.js",
   "publishConfig": {
