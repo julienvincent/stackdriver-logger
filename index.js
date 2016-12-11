@@ -19,7 +19,8 @@ export default ({service, ...auth}) => {
                },
                labels: {
                   service,
-                  pod: process.env.HOSTNAME
+                  pod: process.env.HOSTNAME,
+                  stage: process.env.STAGE
                }
             }, payload ? {message, payload} : message)
 
