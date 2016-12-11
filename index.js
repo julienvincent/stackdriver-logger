@@ -1,87 +1,53 @@
 // @flow
-import io from 'socket.io-client'
-import _ from 'lodash'
+import logging from '@google-cloud/logging'
 
-type ConnectionInfoType = {
-    url: String,
-    token: String,
-    pod: String,
-    kind: String,
-    consume: Boolean
+export default ({service, ...auth}) => {
+   const StackDriverLogger = logging(auth).log("syslog")
+
+   const log = level => {
+      let batchedEntries = []
+      let lastCall = null
+
+      return (message, payload) => {
+         const entry = StackDriverLogger.entry({
+            resource: {
+               type: "gke_cluster",
+               labels: {
+                  cluster_name: "yumo-infrastructure",
+                  location: "europe-west1-d"
+               }
+            },
+            labels: {
+               service,
+               pod: process.env.HOSTNAME
+            }
+         }, payload ? {message, payload} : message)
+
+         batchedEntries.push(entry)
+
+         const id = Math.random()
+         lastCall = id
+
+         setTimeout(() => {
+            if (lastCall == id) {
+               const entries = batchedEntries
+               batchedEntries = []
+               StackDriverLogger[level](entries)
+            }
+         }, 50)
+      }
+   }
+
+   const logger = log('info')
+   logger.alert = log('alert')
+   logger.critical = log('critical')
+   logger.debug = log('debug')
+   logger.error = log('error')
+   logger.emergency = log('emergency')
+   logger.info = log('info')
+   logger.notice = log('notice')
+   logger.warning = log('warning')
+   logger.write = log('write')
+
+   return logger
 }
-
-type Level = "INFO" | "WARNING" | "ERROR" | "IMPORTANT"
-
-type SocketIO = {
-    on: Function,
-    emit: Function
-}
-
-const createLogger = (ConnectionInfo: ConnectionInfoType) => {
-    const socket: SocketIO = io(ConnectionInfo.url)
-    const _log = console.log
-
-    let connected = false
-    let backlog = []
-
-    socket.on('connect', () => {
-        socket.emit('register', {
-            token: ConnectionInfo.token,
-            kind: ConnectionInfo.kind,
-            pod: ConnectionInfo.pod
-        })
-    })
-
-    socket.on('accepted', () => {
-        connected = true
-        let reLog = backlog
-        backlog = []
-
-        _.forEach(reLog, log => {
-            socket.emit('log', log)
-        })
-    })
-
-    socket.on('rejected', () => {
-        console.log("Rejected from logging server")
-    })
-
-    const logger = (message: String, payload: ?any, level: ?Level) => {
-        const log = {
-            message,
-            payload: payload || null,
-            level: level || "INFO",
-            timestamp: _.now()
-        }
-        
-        _log(log.message)
-
-        if (connected) {
-            socket.emit('log', log)
-        } else {
-            backlog.push(log)
-        }
-    }
-
-    logger.error = (message, payload) => {
-        logger(message, payload, "ERROR")
-    }
-
-    logger.warn = (message, payload) => {
-        logger(message, payload, "WARNING")
-    }
-
-    if (ConnectionInfo.consume) {
-        console.log = (...messages) => {
-            logger(messages[0], messages)
-        }
-
-        console.error = (...messages) => {
-            logger.error(messages[0], messages)
-        }
-    }
-
-    return logger
-}
-
-export { createLogger as default, createLogger }

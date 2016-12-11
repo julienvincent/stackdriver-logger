@@ -3,4 +3,6 @@
 .flowconfig
 yarn.lock
 
+service-account.json
 index.js
+test
