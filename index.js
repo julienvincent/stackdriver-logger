@@ -28,6 +28,7 @@ export default ({service, ...auth}) => {
             }, payload ? {message, payload} : message)
 
             batchedEntries.push(entry)
+            console.log(message)
 
             const id = Math.random()
             lastCall = id
