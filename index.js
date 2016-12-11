@@ -4,7 +4,7 @@ export default ({service, ...auth}) => {
    const StackDriverLogger = logging({
       projectId: "yumo-1384",
       ...auth || {}
-   }).log("syslog")
+   }).log(service)
 
    const log = level => {
       let batchedEntries = []
