@@ -1,4 +1,3 @@
-// @flow
 import logging from '@google-cloud/logging'
 
 export default ({service, ...auth}) => {
@@ -9,32 +8,34 @@ export default ({service, ...auth}) => {
       let lastCall = null
 
       return (message, payload) => {
-         const entry = StackDriverLogger.entry({
-            resource: {
-               type: "gke_cluster",
+         if (process.env.GCLOUD_PROJECT && process.env.NODE_ENV == 'production') {
+            const entry = StackDriverLogger.entry({
+               resource: {
+                  type: "gke_cluster",
+                  labels: {
+                     cluster_name: "yumo-infrastructure",
+                     location: "europe-west1-d"
+                  }
+               },
                labels: {
-                  cluster_name: "yumo-infrastructure",
-                  location: "europe-west1-d"
+                  service,
+                  pod: process.env.HOSTNAME
                }
-            },
-            labels: {
-               service,
-               pod: process.env.HOSTNAME
-            }
-         }, payload ? {message, payload} : message)
+            }, payload ? {message, payload} : message)
 
-         batchedEntries.push(entry)
+            batchedEntries.push(entry)
 
-         const id = Math.random()
-         lastCall = id
+            const id = Math.random()
+            lastCall = id
 
-         setTimeout(() => {
-            if (lastCall == id) {
-               const entries = batchedEntries
-               batchedEntries = []
-               StackDriverLogger[level](entries)
-            }
-         }, 50)
+            setTimeout(() => {
+               if (lastCall == id) {
+                  const entries = batchedEntries
+                  batchedEntries = []
+                  StackDriverLogger[level](entries)
+               }
+            }, 50)
+         }
       }
    }
 

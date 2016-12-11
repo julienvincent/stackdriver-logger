@@ -1,7 +1,7 @@
 {
   "name": "local-logger",
   "version": "0.2.0",
-  "description": "Lib for logging to a stream",
+  "description": "Lib for logging to stackdriver",
   "main": "lib/index.js",
   "publishConfig": {
     "registry": "http://registry.yumochefs.com"
@@ -13,7 +13,7 @@
     "prepublish": "npm run build"
   },
   "author": "Julien Vincent",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@google-cloud/logging": "^0.6.0"
   },
