@@ -1,6 +1,6 @@
 {
   "name": "local-logger",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Lib for logging to a stream",
   "main": "lib/index.js",
   "publishConfig": {
