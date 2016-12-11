@@ -8,7 +8,7 @@ export default ({service, ...auth}) => {
       let lastCall = null
 
       return (message, payload) => {
-         if (process.env.GCLOUD_PROJECT && process.env.NODE_ENV == 'production') {
+         if (process.env.NODE_ENV == 'production') {
             const entry = StackDriverLogger.entry({
                resource: {
                   type: "gke_cluster",
