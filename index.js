@@ -1,7 +1,10 @@
 import logging from '@google-cloud/logging'
 
 export default ({service, ...auth}) => {
-   const StackDriverLogger = logging(auth).log("syslog")
+   const StackDriverLogger = logging({
+      projectId: "yumo-1384",
+      ...auth || {}
+   }).log("syslog")
 
    const log = level => {
       let batchedEntries = []
