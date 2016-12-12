@@ -1,6 +1,10 @@
 import logging from '@google-cloud/logging'
 
 export default ({service, ...auth}) => {
+   if (process.env.NODE_ENV != 'production') {
+      console.log("No logs will be persisted to StackDriver while NODE_ENV != production")
+   }
+
    const StackDriverLogger = logging({
       projectId: "yumo-1384",
       ...auth || {}
@@ -40,6 +44,8 @@ export default ({service, ...auth}) => {
                   StackDriverLogger[level](entries)
                }
             }, 50)
+         } else {
+            console.log(message)
          }
       }
    }
